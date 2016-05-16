@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/nav_user">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_user_profile"
+                    android:icon="@drawable/ic_menu_user_profile"
+                    android:title="@string/nav_user_profile" />
+                <item
+                    android:id="@+id/nav_statistics"
+                    android:icon="@drawable/ic_menu_chart"
+                    android:title="@string/nav_statistics" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_activity">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_steps"
+                    android:icon="@drawable/ic_menu_steps"
+                    android:title="@string/nav_steps_num" />
+                <item
+                    android:id="@+id/nav_heart_rate"
+                    android:icon="@drawable/ic_menu_heart_rate"
+                    android:title="@string/nav_heart_rate" />
+                <item
+                    android:id="@+id/nav_sleep"
+                    android:icon="@drawable/ic_menu_sleep"
+                    android:title="@string/nav_sleep" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_nutrition">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_food"
+                    android:icon="@drawable/ic_menu_food"
+                    android:title="@string/nav_food" />
+                <item
+                    android:id="@+id/nav_food_menu"
+                    android:icon="@drawable/ic_menu_food_menu"
+                    android:title="@string/nav_food_menu" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_notifications">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_contacts"
+                    android:icon="@drawable/ic_menu_contacts"
+                    android:title="@string/nav_contacts" />
+                <item
+                    android:id="@+id/nav_apps"
+                    android:icon="@drawable/ic_menu_apps"
+                    android:title="@string/nav_apps" />
+                <item
+                    android:id="@+id/nav_alarms"
+                    android:icon="@drawable/ic_menu_alarms"
+                    android:title="@string/nav_alarms" />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/nav_setup"
+        android:icon="@drawable/ic_menu_setup"
+        android:title="@string/nav_setup" />
+
+</menu>

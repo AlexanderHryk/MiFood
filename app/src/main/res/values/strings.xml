@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">MiFood</string>
+    <string name="scan_activity_title">Поиск устройств</string>
+    <string name="discovered_devices_list_header_title">Доступные устройства</string>
+    <string name="discovered_devices_list_footer_title">Выберите устройство для подключения</string>
+    <string name="menu_scan_start_scan">Поиск устройств</string>
+    <string name="menu_scan_cancel_scan">Отменить</string>
+    <string name="coupling">Сопряжение...</string>
+    <string name="coupling_error">Ошибка сопряжения</string>
+    <string name="menu_main_bind_device">Подключить устройство</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_user">Пользователь</string>
+    <string name="nav_user_profile">Профиль</string>
+    <string name="nav_statistics">Статистика</string>
+    <string name="nav_activity">Активность</string>
+    <string name="nav_steps_num">Кол. пройденных шагов</string>
+    <string name="nav_heart_rate">Пульс</string>
+    <string name="nav_sleep">Сон</string>
+    <string name="nav_nutrition">Питание</string>
+    <string name="nav_food">Продукты</string>
+    <string name="nav_food_menu">Меню</string>
+    <string name="nav_notifications">Уведомления</string>
+    <string name="nav_contacts">Контакты</string>
+    <string name="nav_apps">Приложения</string>
+    <string name="nav_alarms">Будильники</string>
+    <string name="nav_setup">Настройки</string>
+</resources>
