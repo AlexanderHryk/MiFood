@@ -67,10 +67,12 @@ public class MainActivity extends AppCompatActivity implements IMainView, Naviga
         return true;
     }
 
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -105,14 +107,10 @@ public class MainActivity extends AppCompatActivity implements IMainView, Naviga
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         if (id == R.id.nav_steps) {
-            if (this.mStepsFragment == null) {
-                this.mStepsFragment = new StepsFragment();
-            }
+            this.mStepsFragment = new StepsFragment();
             ft.replace(R.id.fragment_container, this.mStepsFragment);
         } else if (id == R.id.nav_heart_rate) {
-            if (this.mHeartRateFragment == null) {
-                this.mHeartRateFragment = new HeartRateFragment();
-            }
+            this.mHeartRateFragment = new HeartRateFragment();
             ft.replace(R.id.fragment_container, this.mHeartRateFragment);
         }
 

@@ -15,7 +15,7 @@
         android:id="@+id/progress_indicator"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         app:cpv_color="?attr/colorPrimary"
         app:cpv_indeterminate="true"
         app:cpv_thickness="1.5dp" />

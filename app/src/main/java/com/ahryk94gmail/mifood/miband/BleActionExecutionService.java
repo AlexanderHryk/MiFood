@@ -25,11 +25,14 @@ public class BleActionExecutionService extends Service {
     public static final String ACTION_CONNECTION_STATE_CHANGED = "com.ahryk94gmail.mifood.miband.ACTION_CONNECTION_STATE_CHANGED";
     public static final String ACTION_PAIRED = "com.ahryk94gmail.mifood.miband.ACTION_PAIRED";
     public static final String ACTION_REALTIME_STEPS = "com.ahryk94gmail.mifood.miband.ACTION_REALTIME_STEPS";
+    public static final String ACTION_STEPS = "com.ahryk94gmail.mifood.miband.ACTION_STEPS";
+    public static final String ACTION_HEART_RATE = "com.ahryk94gmail.mifood.miband.ACTION_HEART_RATE";
 
     public static final String EXTRA_CONNECTION_STATE = "com.ahryk94gmail.mifood.miband.EXTRA_CONNECTION_STATE";
     public static final String EXTRA_PAIRING_RESULT_CODE = "com.ahryk94gmail.mifood.miband.EXTRA_PAIRING_RESULT_CODE";
     public static final String EXTRA_DEVICE_ADDRESS = "com.ahryk94gmail.mifood.miband.EXTRA_DEVICE_ADDRESS";
     public static final String EXTRA_STEPS = "com.ahryk94gmail.mifood.miband.EXTRA_STEPS_NUM";
+    public static final String EXTRA_HEART_RATE = "com.ahryk94gmail.mifood.miband.EXTRA_HEART_RATE";
 
     public static final int EXTRA_CONNECTION_STATE_CONNECTED = 0x100;
     public static final int EXTRA_CONNECTION_STATE_DISCONNECTED = 0x101;
@@ -151,11 +154,12 @@ public class BleActionExecutionService extends Service {
                 Intent intent = new Intent(ACTION_CONNECTION_STATE_CHANGED)
                         .putExtra(EXTRA_CONNECTION_STATE, EXTRA_CONNECTION_STATE_CONNECTED);
                 LocalBroadcastManager.getInstance(BleActionExecutionService.this).sendBroadcast(intent);
-                yield();
             } else {
                 Debug.WriteLog(DBG, "onServicesDiscovered, status: " + status);
                 close();
             }
+
+            yield();
         }
 
         @Override
@@ -164,10 +168,20 @@ public class BleActionExecutionService extends Service {
             Debug.WriteLog(DBG, "onCharacteristicRead, status: " + status);
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                Intent intent = new Intent();
+                byte[] data = characteristic.getValue();
 
+                if (characteristic.getUuid().equals(Constants.characteristics.UUID_CHAR_REALTIME_STEPS)) {
+                    int steps = data[3] << 24 | (data[2] & 0xFF) << 16 | (data[1] & 0xFF) << 8 | (data[0] & 0xFF);
+                    intent.setAction(ACTION_STEPS).putExtra(EXTRA_STEPS, steps);
+                }
+
+                LocalBroadcastManager.getInstance(BleActionExecutionService.this).sendBroadcast(intent);
             } else {
 
             }
+
+            yield();
         }
 
         @Override
@@ -201,6 +215,11 @@ public class BleActionExecutionService extends Service {
             if (characteristic.getUuid().equals(Constants.characteristics.UUID_CHAR_REALTIME_STEPS)) {
                 int steps = data[3] << 24 | (data[2] & 0xFF) << 16 | (data[1] & 0xFF) << 8 | (data[0] & 0xFF);
                 intent.setAction(ACTION_REALTIME_STEPS).putExtra(EXTRA_STEPS, steps);
+            } else if (characteristic.getUuid().equals(Constants.characteristics.UUID_CHAR_HEART_RATE)) {
+                if (data.length == 2 && data[0] == 6) {
+                    int heartRate = data[1] & 0xFF;
+                    intent.setAction(ACTION_HEART_RATE).putExtra(EXTRA_HEART_RATE, heartRate);
+                }
             }
 
             LocalBroadcastManager.getInstance(BleActionExecutionService.this).sendBroadcast(intent);

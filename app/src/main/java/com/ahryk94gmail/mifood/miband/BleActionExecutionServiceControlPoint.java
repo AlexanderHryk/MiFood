@@ -34,7 +34,7 @@ public class BleActionExecutionServiceControlPoint implements IBleActionExecutio
 
                 if (mBuffer.size() != 0) {
                     addToQueue(mBuffer);
-                    mBuffer.clear(); //TODO
+                    mBuffer.clear();
                 }
             }
 

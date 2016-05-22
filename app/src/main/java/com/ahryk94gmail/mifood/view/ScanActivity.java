@@ -27,8 +27,8 @@ import java.util.Map;
 
 public class ScanActivity extends AppCompatActivity implements IScanView {
 
-    private static final String ATTRIBUTE_DEVICE_NAME_TEXT = "device_name";
-    private static final String ATTRIBUTE_DEVICE_ADDRESS_TEXT = "device_address";
+    private static final String ATTRIBUTE_DEVICE_NAME = "device_name";
+    private static final String ATTRIBUTE_DEVICE_ADDRESS = "device_address";
 
     private IScanPresenter mScanPresenter;
     private ListView mLvDiscoveredDevices;
@@ -56,14 +56,14 @@ public class ScanActivity extends AppCompatActivity implements IScanView {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Map<String, String> item = (Map<String, String>) parent.getAdapter().getItem(position);
-                ScanActivity.this.mScanPresenter.bindDevice(position, item.get(ATTRIBUTE_DEVICE_ADDRESS_TEXT));
+                ScanActivity.this.mScanPresenter.bindDevice(position, item.get(ATTRIBUTE_DEVICE_ADDRESS));
             }
         });
 
         this.mLvDiscoveredDevices.addHeaderView(getLayoutInflater().inflate(R.layout.discovered_devices_list_header, null), null, false);
         this.mLvDiscoveredDevices.addFooterView(getLayoutInflater().inflate(R.layout.discovered_devices_list_footer, null), null, false);
 
-        String[] from = {ATTRIBUTE_DEVICE_NAME_TEXT, ATTRIBUTE_DEVICE_ADDRESS_TEXT};
+        String[] from = {ATTRIBUTE_DEVICE_NAME, ATTRIBUTE_DEVICE_ADDRESS};
         int[] to = {R.id.tv_title, R.id.tv_subtitle};
 
         this.mAdapter = new SimpleAdapter(this, this.mData, R.layout.discovered_device_info_item, from, to);
@@ -123,8 +123,8 @@ public class ScanActivity extends AppCompatActivity implements IScanView {
     @Override
     public void addDeviceInfoItem(String name, String address) {
         Map<String, String> deviceInfo = new HashMap<>();
-        deviceInfo.put(ATTRIBUTE_DEVICE_NAME_TEXT, name);
-        deviceInfo.put(ATTRIBUTE_DEVICE_ADDRESS_TEXT, address);
+        deviceInfo.put(ATTRIBUTE_DEVICE_NAME, name);
+        deviceInfo.put(ATTRIBUTE_DEVICE_ADDRESS, address);
         this.mData.add(deviceInfo);
         this.mAdapter.notifyDataSetChanged();
     }
