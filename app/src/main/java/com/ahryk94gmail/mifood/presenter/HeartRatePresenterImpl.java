@@ -64,6 +64,20 @@ public class HeartRatePresenterImpl implements IHeartRatePresenter {
         bleActions.add(new SetHeartRateNotificationAction());
         bleActions.add(new StartHeartRateMeasuringAction());
         this.mControlPoint.addToQueue(bleActions);
+
+        /*List<IBleAction> bleActions = new LinkedList<>();
+        bleActions.add(new ConnectAction(bondedDevice));
+        bleActions.add(new SetUserProfileAction(userProfile, bondedDevice.getAddress()));
+        bleActions.add(new SetActivityNotificationAction());
+        bleActions.add(new StartSyncAction());
+        this.mControlPoint.addToQueue(bleActions);
+        /ist<ActivityData> list = ActivityDbHelper.getInstance(this.mHeartRateView.getContext()).SelectActivityData();
+
+        ActivityAnalysis analysis = new ActivityAnalysis();
+        ActivityAmounts amounts = analysis.calculateActivityAmounts(list);
+
+        float hoursOfSleep = amounts.getTotalSeconds() / (float) (60 * 60);
+        int i = 0;*/
     }
 
     @Override

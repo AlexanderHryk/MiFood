@@ -44,6 +44,8 @@ public final class Constants {
         public static final byte[] ENABLE_REALTIME_STEPS_NOTIFY = {3, 1};
         public static final byte[] DISABLE_REALTIME_STEPS_NOTIFY = {3, 0};
         public static final byte[] START_HEART_RATE_SCAN = {21, 2, 1};
+        public static final byte[] FETCH_ACTIVITY_DATA = {6};
+        public static final byte COMMAND_CONFIRM_ACTIVITY_DATA_TRANSFER_COMPLETE = 0xA;
     }
 
     public static final class type {

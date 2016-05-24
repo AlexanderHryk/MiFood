@@ -64,6 +64,12 @@ public class HeartRateFragment extends Fragment implements IHeartRateView, View.
     }
 
     @Override
+    public void onDestroy() {
+        this.mHeartRatePresenter.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 

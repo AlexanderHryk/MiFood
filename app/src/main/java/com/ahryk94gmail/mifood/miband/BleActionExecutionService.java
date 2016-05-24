@@ -14,7 +14,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.ahryk94gmail.mifood.Debug;
+import com.ahryk94gmail.mifood.db.ActivityDbHelper;
+import com.ahryk94gmail.mifood.model.ActivityData;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -172,7 +176,7 @@ public class BleActionExecutionService extends Service {
                 byte[] data = characteristic.getValue();
 
                 if (characteristic.getUuid().equals(Constants.characteristics.UUID_CHAR_REALTIME_STEPS)) {
-                    int steps = data[3] << 24 | (data[2] & 0xFF) << 16 | (data[1] & 0xFF) << 8 | (data[0] & 0xFF);
+                    int steps = handleStepsNotification(data);
                     intent.setAction(ACTION_STEPS).putExtra(EXTRA_STEPS, steps);
                 }
 
@@ -213,13 +217,13 @@ public class BleActionExecutionService extends Service {
             byte[] data = characteristic.getValue();
 
             if (characteristic.getUuid().equals(Constants.characteristics.UUID_CHAR_REALTIME_STEPS)) {
-                int steps = data[3] << 24 | (data[2] & 0xFF) << 16 | (data[1] & 0xFF) << 8 | (data[0] & 0xFF);
+                int steps = handleStepsNotification(data);
                 intent.setAction(ACTION_REALTIME_STEPS).putExtra(EXTRA_STEPS, steps);
             } else if (characteristic.getUuid().equals(Constants.characteristics.UUID_CHAR_HEART_RATE)) {
-                if (data.length == 2 && data[0] == 6) {
-                    int heartRate = data[1] & 0xFF;
-                    intent.setAction(ACTION_HEART_RATE).putExtra(EXTRA_HEART_RATE, heartRate);
-                }
+                int heartRate = handleHeartRateNotification(data);
+                intent.setAction(ACTION_HEART_RATE).putExtra(EXTRA_HEART_RATE, heartRate);
+            } else if (characteristic.getUuid().equals(Constants.characteristics.UUID_CHAR_ACTIVITY)) {
+                handleActivityDataNotification(data);
             }
 
             LocalBroadcastManager.getInstance(BleActionExecutionService.this).sendBroadcast(intent);
@@ -319,4 +323,136 @@ public class BleActionExecutionService extends Service {
         super.onRebind(intent);
         Debug.WriteLog(DBG, "BleActionExecutionService: onRebind");
     }
+
+    private int handleStepsNotification(byte[] data) {
+        return data[3] << 24 | (data[2] & 0xFF) << 16 | (data[1] & 0xFF) << 8 | (data[0] & 0xFF);
+    }
+
+    private int handleHeartRateNotification(byte[] data) {
+        int heartRate = -1;
+
+        if (data.length == 2 && data[0] == 6) {
+            heartRate = data[1] & 0xFF;
+        }
+        return heartRate;
+    }
+
+    private static final int activityDataHolderSize = 3 * 60 * 4;
+
+    private static class ActivityStruct {
+        public byte[] activityDataHolder = new byte[activityDataHolderSize];
+        public int activityDataHolderProgress = 0;
+        public int activityDataRemainingBytes = 0;
+        public int activityDataUntilNextHeader = 0;
+        public GregorianCalendar activityDataTimestampProgress = null;
+        public GregorianCalendar activityDataTimestampToAck = null;
+    }
+
+    private ActivityStruct activityStruct;
+
+    private void handleActivityDataNotification(byte[] data) {
+        boolean firstChunk = activityStruct == null;
+        if (firstChunk) {
+            activityStruct = new ActivityStruct();
+        }
+
+        if (data.length == 11) {
+            int dataType = data[0];
+
+            GregorianCalendar timestamp = parseTimestamp(data, 1);
+
+            int totalDataToRead = (data[7] & 0xFF) | ((data[8] & 0xFF) << 8);
+            totalDataToRead *= (dataType == 1) ? 3 : 1;
+
+            int dataUntilNextHeader = (data[9] & 0xFF) | ((data[10] & 0xFF) << 8);
+            dataUntilNextHeader *= (dataType == 1) ? 3 : 1;
+
+            activityStruct.activityDataRemainingBytes = activityStruct.activityDataUntilNextHeader = dataUntilNextHeader;
+            activityStruct.activityDataTimestampToAck = (GregorianCalendar) timestamp.clone();
+            activityStruct.activityDataTimestampProgress = timestamp;
+        } else {
+            bufferActivityData(data);
+        }
+
+        if (activityStruct.activityDataRemainingBytes == 0) {
+            sendAckDataTransfer(activityStruct.activityDataTimestampToAck, activityStruct.activityDataUntilNextHeader);
+        }
+    }
+
+    private void bufferActivityData(byte[] value) {
+        if (activityStruct.activityDataRemainingBytes >= value.length) {
+            if (value.length == 20 || value.length == activityStruct.activityDataRemainingBytes) {
+                System.arraycopy(value, 0, activityStruct.activityDataHolder, activityStruct.activityDataHolderProgress, value.length);
+                activityStruct.activityDataHolderProgress += value.length;
+                activityStruct.activityDataRemainingBytes -= value.length;
+
+                if (this.activityDataHolderSize == activityStruct.activityDataHolderProgress) {
+                    flushActivityDataHolder();
+                }
+            }
+        }
+    }
+
+    private void flushActivityDataHolder() {
+        if (activityStruct == null) {
+            return;
+        }
+
+        byte type, intensity, steps;
+
+        for (int i = 0; i < activityStruct.activityDataHolderProgress; i += 3) {
+            type = activityStruct.activityDataHolder[i];
+            intensity = activityStruct.activityDataHolder[i + 1];
+            steps = activityStruct.activityDataHolder[i + 2];
+
+            ActivityDbHelper.getInstance(this).InsertActivityData(new ActivityData(
+                    (int) (activityStruct.activityDataTimestampProgress.getTimeInMillis() / 1000),
+                    ActivityData.PROVIDER_MIBAND,
+                    intensity & 0xFF,
+                    steps & 0xFF,
+                    type & 0xFF
+            ));
+
+            activityStruct.activityDataTimestampProgress.add(Calendar.MINUTE, 1);
+        }
+
+        activityStruct.activityDataHolderProgress = 0;
+    }
+
+    private void sendAckDataTransfer(Calendar time, int bytesTransferred) {
+        byte[] ack = new byte[]{
+                Constants.protocol.COMMAND_CONFIRM_ACTIVITY_DATA_TRANSFER_COMPLETE,
+                (byte) (time.get(Calendar.YEAR) - 2000),
+                (byte) time.get(Calendar.MONTH),
+                (byte) time.get(Calendar.DATE),
+                (byte) time.get(Calendar.HOUR_OF_DAY),
+                (byte) time.get(Calendar.MINUTE),
+                (byte) time.get(Calendar.SECOND),
+                (byte) (bytesTransferred & 0xFF),
+                (byte) (0xFF & (bytesTransferred >> 8))
+        };
+
+        BleActionExecutionServiceControlPoint controlPoint = new BleActionExecutionServiceControlPoint(this);
+        controlPoint.bind();
+        controlPoint.addToQueue(new SendAckAction(ack));
+
+        flushActivityDataHolder();
+
+        if (bytesTransferred == 0) {
+            activityStruct = null;
+            //TODO sync completed
+        }
+    }
+
+    private GregorianCalendar parseTimestamp(byte[] data, int offset) {
+        GregorianCalendar timestamp = new GregorianCalendar(
+                data[offset] + 2000,
+                data[offset + 1],
+                data[offset + 2],
+                data[offset + 3],
+                data[offset + 4],
+                data[offset + 5]);
+        return timestamp;
+    }
+
 }
