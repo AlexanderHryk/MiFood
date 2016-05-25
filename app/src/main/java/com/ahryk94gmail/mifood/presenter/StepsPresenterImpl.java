@@ -42,8 +42,7 @@ public class StepsPresenterImpl implements IStepsPresenter {
         this.mStepsView.setCal(0);
         this.mStepsView.setTime(0);
         this.mStepsView.setDistance(0f);
-        this.mControlPoint = new BleActionExecutionServiceControlPoint(view.getContext());
-        this.mControlPoint.bind();
+        this.mControlPoint = BleActionExecutionServiceControlPoint.getInstance(view.getContext());
 
         this.mRealtimeStepsReceiver = new BroadcastReceiver() {
             @Override
@@ -61,7 +60,7 @@ public class StepsPresenterImpl implements IStepsPresenter {
 
                 mStepsView.setProgress(steps, PROGRESS_ANIM_DURATION, 0L);
                 mStepsView.setCal(123);
-                mStepsView.setTime(31);
+                mStepsView.setTime(37 * 60);
                 mStepsView.setDistance(1.34f);
             }
         };
@@ -81,10 +80,10 @@ public class StepsPresenterImpl implements IStepsPresenter {
 
     @Override
     public void sync() {
-        this.mStepsView.showInto(INTRO_ANIM_DURATION);
+        this.mStepsView.showIntro(INTRO_ANIM_DURATION);
 
         BluetoothDevice bondedDevice = UserPreferences.getInstance().loadBondedDevice(this.mStepsView.getContext());
-        UserProfile userProfile = new UserProfile(10000000, 1, 21, 182, 76, "Alex", 0);
+        UserProfile userProfile = new UserProfile(10000000, UserProfile.GENDER_MALE, 21, 182, 76, "Alex", 0);
 
         List<IBleAction> bleActions = new LinkedList<>();
         bleActions.add(new ConnectAction(bondedDevice));

@@ -16,4 +16,7 @@
     <color name="colorDecoSeries5">#FF795548</color>
     <color name="colorRed">#FFF44336</color>
     <color name="colorLime">#FF32CD32</color>
+    <color name="colorTotalSleep">#FF640C91</color>
+    <color name="colorDeepSleep">#FF3F7E8A</color>
+    <color name="colorLightSleep">#FF40E0D0</color>
 </resources>

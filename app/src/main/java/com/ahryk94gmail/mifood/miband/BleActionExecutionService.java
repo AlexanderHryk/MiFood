@@ -31,6 +31,7 @@ public class BleActionExecutionService extends Service {
     public static final String ACTION_REALTIME_STEPS = "com.ahryk94gmail.mifood.miband.ACTION_REALTIME_STEPS";
     public static final String ACTION_STEPS = "com.ahryk94gmail.mifood.miband.ACTION_STEPS";
     public static final String ACTION_HEART_RATE = "com.ahryk94gmail.mifood.miband.ACTION_HEART_RATE";
+    public static final String ACTION_SYNC_COMPLETED = "com.ahryk94gmail.mifood.miband.ACTION_SYNC_COMPLETED";
 
     public static final String EXTRA_CONNECTION_STATE = "com.ahryk94gmail.mifood.miband.EXTRA_CONNECTION_STATE";
     public static final String EXTRA_PAIRING_RESULT_CODE = "com.ahryk94gmail.mifood.miband.EXTRA_PAIRING_RESULT_CODE";
@@ -49,6 +50,7 @@ public class BleActionExecutionService extends Service {
     private MiBandProvider mProvider;
     private ExecutorService mExecutor;
     private BleActionExecutionServiceBinder mBinder;
+    private ActivityDbHelper mActivityDbHelper;
 
     class MiBandProvider extends BluetoothGattCallback implements IBleProvider {
 
@@ -290,6 +292,7 @@ public class BleActionExecutionService extends Service {
         this.mProvider = new MiBandProvider();
         this.mExecutor = Executors.newFixedThreadPool(1);
         this.mBinder = new BleActionExecutionServiceBinder();
+        this.mActivityDbHelper = ActivityDbHelper.getInstance(this);
     }
 
     @Override
@@ -405,12 +408,12 @@ public class BleActionExecutionService extends Service {
             intensity = activityStruct.activityDataHolder[i + 1];
             steps = activityStruct.activityDataHolder[i + 2];
 
-            ActivityDbHelper.getInstance(this).InsertActivityData(new ActivityData(
+            this.mActivityDbHelper.InsertActivityData(new ActivityData(
                     (int) (activityStruct.activityDataTimestampProgress.getTimeInMillis() / 1000),
                     ActivityData.PROVIDER_MIBAND,
-                    intensity & 0xFF,
-                    steps & 0xFF,
-                    type & 0xFF
+                    intensity,
+                    steps,
+                    type
             ));
 
             activityStruct.activityDataTimestampProgress.add(Calendar.MINUTE, 1);
@@ -432,15 +435,15 @@ public class BleActionExecutionService extends Service {
                 (byte) (0xFF & (bytesTransferred >> 8))
         };
 
-        BleActionExecutionServiceControlPoint controlPoint = new BleActionExecutionServiceControlPoint(this);
-        controlPoint.bind();
-        controlPoint.addToQueue(new SendAckAction(ack));
+        BleActionExecutionServiceControlPoint.getInstance(this).addToQueue(new SendAckAction(ack));
 
         flushActivityDataHolder();
 
         if (bytesTransferred == 0) {
             activityStruct = null;
-            //TODO sync completed
+            Intent intent = new Intent(ACTION_SYNC_COMPLETED);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
         }
     }
 

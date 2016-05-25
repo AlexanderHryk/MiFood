@@ -74,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:text="@string/heart_rate_good"
+            android:text="@string/heart_rate_state_normal"
             android:textColor="@color/colorTextPrimary"
             android:textSize="14sp" />
 

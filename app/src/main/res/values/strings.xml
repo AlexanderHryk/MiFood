@@ -30,10 +30,11 @@
 
     <string name="steps">шагов</string>
     <string name="goal">Цель:</string>
-    <string name="kcal">ккал</string>
-    <string name="min">мин</string>
-    <string name="km">км</string>
+    <string name="kcal_unit">ккал</string>
+    <string name="hour_unit">ч</string>
+    <string name="min_unit">мин</string>
+    <string name="km_unit">км</string>
     <string name="heart_rate_unit">уд/мин</string>
-    <string name="heart_rate_good">Хорошо</string>
-    <string name="heart_rate_bad">Плохо</string>
+    <string name="heart_rate_state_normal">Хорошо</string>
+    <string name="heart_rate_state_abnormal">Плохо</string>
 </resources>

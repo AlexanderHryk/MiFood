@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, Naviga
 
     private StepsFragment mStepsFragment;
     private HeartRateFragment mHeartRateFragment;
+    private SleepActivityFragment mSleepActivityFragment;
 
     private IMainPresenter mMainPresenter;
 
@@ -112,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, Naviga
         } else if (id == R.id.nav_heart_rate) {
             this.mHeartRateFragment = new HeartRateFragment();
             ft.replace(R.id.fragment_container, this.mHeartRateFragment);
+        } else if (id == R.id.nav_sleep) {
+            this.mSleepActivityFragment = new SleepActivityFragment();
+            ft.replace(R.id.fragment_container, this.mSleepActivityFragment);
         }
 
         ft.commit();

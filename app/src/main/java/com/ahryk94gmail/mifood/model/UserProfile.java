@@ -10,6 +10,9 @@ import java.nio.ByteBuffer;
 
 public class UserProfile implements IUserProfile, Parcelable {
 
+    public static final int GENDER_MALE = 1;
+    public static final int GENDER_FEMALE = 0;
+
     private int mUid;
     private byte mGender;
     private byte mAge;

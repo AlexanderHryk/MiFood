@@ -17,6 +17,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.ahryk94gmail.mifood.R;
+import com.ahryk94gmail.mifood.model.HrMeasurementInfo;
 import com.ahryk94gmail.mifood.presenter.HeartRatePresenterImpl;
 import com.ahryk94gmail.mifood.presenter.IHeartRatePresenter;
 import com.hookedonplay.decoviewlib.DecoView;
@@ -26,9 +27,8 @@ import com.skyfishjy.library.RippleBackground;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HeartRateFragment extends Fragment implements IHeartRateView, View.OnClickListener {
@@ -106,9 +106,9 @@ public class HeartRateFragment extends Fragment implements IHeartRateView, View.
 
                 if (id == R.id.tv_heart_rate_state) {
                     if ((boolean) data) {
-                        ((TextView) view).setText(getString(R.string.heart_rate_good));
+                        ((TextView) view).setText(getString(R.string.heart_rate_state_normal));
                     } else {
-                        ((TextView) view).setText(getString(R.string.heart_rate_bad));
+                        ((TextView) view).setText(getString(R.string.heart_rate_state_abnormal));
                     }
                     return true;
                 } else if (id == R.id.iv_heart_rate_state_icon) {
@@ -171,14 +171,30 @@ public class HeartRateFragment extends Fragment implements IHeartRateView, View.
     }
 
     @Override
-    public void addMeasurementInfo(int heartRate, Date dateTime, boolean heartRateState) {
+    public void addMeasurementInfo(HrMeasurementInfo info) {
+        addMeasurementInfo(info, true);
+    }
+
+
+    private void addMeasurementInfo(HrMeasurementInfo info, boolean notify) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd\tHH:mm:ss");
 
         Map<String, Object> item = new HashMap<>();
-        item.put(ATTRIBUTE_HEART_RATE, String.valueOf(heartRate));
-        item.put(ATTRIBUTE_DATE_TIME, sdf.format(dateTime));
-        item.put(ATTRIBUTE_HEART_RATE_STATE, heartRateState);
+        item.put(ATTRIBUTE_HEART_RATE, String.valueOf(info.getHeartRate()));
+        item.put(ATTRIBUTE_DATE_TIME, sdf.format(info.getDateTime()));
+        item.put(ATTRIBUTE_HEART_RATE_STATE, info.isHeartRateStateNormal());
         this.mData.add(item);
+
+        if (notify)
+            this.mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void addMeasurementInfo(List<HrMeasurementInfo> info) {
+        for (HrMeasurementInfo item : info) {
+            addMeasurementInfo(item, false);
+        }
+
         this.mAdapter.notifyDataSetChanged();
     }
 

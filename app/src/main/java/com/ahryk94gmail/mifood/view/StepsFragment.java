@@ -23,9 +23,16 @@ import com.hookedonplay.decoviewlib.events.DecoEvent;
 public class StepsFragment extends Fragment implements IStepsView {
 
     private TextView mTvSteps;
+    private TextView mTvStepsUnit;
     private TextView mTvCal;
-    private TextView mTvTime;
+    private TextView mTvCalUnit;
+    private TextView mTvTimeHours;
+    private TextView mTvTimeHoursUnit;
+    private TextView mTvTimeMinutes;
+    private TextView mTvTimeMinutesUnit;
     private TextView mTvDistance;
+    private TextView mTvDistanceUnit;
+    private TextView mTvStepsGoal;
     private IStepsPresenter mStepsPresenter;
     private DecoView mDecoView;
     private int mBackgroundSeriesId;
@@ -42,9 +49,16 @@ public class StepsFragment extends Fragment implements IStepsView {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_steps, container, false);
         this.mTvSteps = (TextView) view.findViewById(R.id.tv_steps);
+        this.mTvStepsUnit = (TextView) view.findViewById(R.id.tv_steps_unit);
         this.mTvCal = (TextView) view.findViewById(R.id.tv_cal);
-        this.mTvTime = (TextView) view.findViewById(R.id.tv_time);
+        this.mTvCalUnit = (TextView) view.findViewById(R.id.tv_cal_unit);
+        this.mTvTimeHours = (TextView) view.findViewById(R.id.tv_time_hours);
+        this.mTvTimeHoursUnit = (TextView) view.findViewById(R.id.tv_time_hours_unit);
+        this.mTvTimeMinutes = (TextView) view.findViewById(R.id.tv_time_minutes);
+        this.mTvTimeMinutesUnit = (TextView) view.findViewById(R.id.tv_time_minutes_unit);
         this.mTvDistance = (TextView) view.findViewById(R.id.tv_distance);
+        this.mTvDistanceUnit = (TextView) view.findViewById(R.id.tv_distance_unit);
+        this.mTvStepsGoal = (TextView) view.findViewById(R.id.tv_steps_goal);
         this.mDecoView = (DecoView) view.findViewById(R.id.dynamicArcView);
         return view;
     }
@@ -100,7 +114,7 @@ public class StepsFragment extends Fragment implements IStepsView {
 
     @Override
     public void setGoal(int goal) {
-        ((TextView) getView().findViewById(R.id.tv_steps_goal)).setText(getString(R.string.goal) + " " + String.format("%,d", goal)
+        this.mTvStepsGoal.setText(getString(R.string.goal) + " " + String.format("%,d", goal)
                 + " " + getString(R.string.steps));
     }
 
@@ -110,8 +124,11 @@ public class StepsFragment extends Fragment implements IStepsView {
     }
 
     @Override
-    public void setTime(int min) {
-        this.mTvTime.setText(String.valueOf(min));
+    public void setTime(int seconds) {
+        int[] time = convertSecondsToHoursMinutes(seconds);
+
+        this.mTvTimeHours.setText(String.valueOf(time[0]));
+        this.mTvTimeMinutes.setText(String.valueOf(time[1]));
     }
 
     @Override
@@ -120,7 +137,7 @@ public class StepsFragment extends Fragment implements IStepsView {
     }
 
     @Override
-    public void showInto(long animDuration) {
+    public void showIntro(long animDuration) {
         this.mDecoView.executeReset();
 
         Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.intro_scale);
@@ -146,16 +163,18 @@ public class StepsFragment extends Fragment implements IStepsView {
         final int colorTextPrimary = ContextCompat.getColor(getContext(), R.color.colorTextPrimary);
 
         this.mTvSteps.setTextColor(colorTextPrimary);
-        ((TextView) getView().findViewById(R.id.tv_steps_unit)).setTextColor(colorTextPrimary);
+        this.mTvStepsUnit.setTextColor(colorTextPrimary);
 
         this.mTvCal.setTextColor(colorTextPrimary);
-        ((TextView) getView().findViewById(R.id.tv_cal_unit)).setTextColor(colorTextPrimary);
+        this.mTvCalUnit.setTextColor(colorTextPrimary);
 
-        this.mTvTime.setTextColor(colorTextPrimary);
-        ((TextView) getView().findViewById(R.id.tv_time_unit)).setTextColor(colorTextPrimary);
+        this.mTvTimeHours.setTextColor(colorTextPrimary);
+        this.mTvTimeHoursUnit.setTextColor(colorTextPrimary);
+        this.mTvTimeMinutes.setTextColor(colorTextPrimary);
+        this.mTvTimeMinutesUnit.setTextColor(colorTextPrimary);
 
         this.mTvDistance.setTextColor(colorTextPrimary);
-        ((TextView) getView().findViewById(R.id.tv_distance_unit)).setTextColor(colorTextPrimary);
+        this.mTvDistanceUnit.setTextColor(colorTextPrimary);
 
         float endPosition = (float) steps / this.mStepsPresenter.getGoal() * 50f;
 
@@ -176,5 +195,13 @@ public class StepsFragment extends Fragment implements IStepsView {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private int[] convertSecondsToHoursMinutes(int seconds) {
+        int hours = seconds / (60 * 60);
+        int minutes = (seconds % (60 * 60)) / 60;
+        int[] result = {hours, minutes};
+
+        return result;
     }
 }

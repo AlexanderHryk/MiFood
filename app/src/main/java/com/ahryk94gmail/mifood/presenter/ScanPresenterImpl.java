@@ -36,8 +36,7 @@ public class ScanPresenterImpl implements IScanPresenter {
 
     public ScanPresenterImpl(IScanView view) {
         this.mScanView = view;
-        this.mControlPoint = new BleActionExecutionServiceControlPoint(view.getContext());
-        this.mControlPoint.bind();
+        this.mControlPoint = BleActionExecutionServiceControlPoint.getInstance(view.getContext());
 
         this.mDiscoverer = new MiBandDiscoverer(view.getContext());
 
@@ -123,6 +122,6 @@ public class ScanPresenterImpl implements IScanPresenter {
         this.mDiscoverer = null;
         this.mScanView = null;
 
-        //TODO disconnect device when it not paired but still connected
+        //TODO disconnect device when it does not paired but still connected
     }
 }

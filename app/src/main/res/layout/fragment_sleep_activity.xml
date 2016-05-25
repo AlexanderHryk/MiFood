@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.ahryk94gmail.mifood.view.StepsFragment">
+    tools:context="com.ahryk94gmail.mifood.view.SleepActivityFragment">
 
     <LinearLayout
         android:id="@+id/detailed_info"
@@ -17,83 +17,39 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:id="@+id/cal_burned_info_container"
+            android:id="@+id/deep_sleep_info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/iv_cal_burned"
+                android:id="@+id/iv_deep_sleep"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/burned_calories_circle"
+                android:background="@drawable/deep_sleep_circle"
                 android:padding="12dp"
-                android:src="@drawable/ic_burn"
+                android:src="@drawable/ic_night"
                 android:tint="#FFFFFFFF" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/iv_cal_burned"
+                android:layout_below="@id/iv_deep_sleep"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_cal"
+                    android:id="@+id/tv_deep_sleep_hours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorTextPrimaryTransparent"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    tools:text="342" />
+                    tools:text="4" />
 
                 <TextView
-                    android:id="@+id/tv_cal_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:text="@string/kcal_unit"
-                    android:textColor="@color/colorTextPrimaryTransparent"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/time_info_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/iv_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/time_circle"
-                android:padding="12dp"
-                android:src="@drawable/ic_timer"
-                android:tint="#FFFFFFFF" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv_time"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_time_hours"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextPrimaryTransparent"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:text="1" />
-
-                <TextView
-                    android:id="@+id/tv_time_hours_unit"
+                    android:id="@+id/tv_deep_sleep_hours_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
@@ -103,16 +59,79 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/tv_time_minutes"
+                    android:id="@+id/tv_deep_sleep_minutes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorTextPrimaryTransparent"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    tools:text="21" />
+                    tools:text="32" />
 
                 <TextView
-                    android:id="@+id/tv_time_minutes_unit"
+                    android:id="@+id/tv_deep_sleep_minutes_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/min_unit"
+                    android:textColor="@color/colorTextPrimaryTransparent"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/light_sleep_info_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_light_sleep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/light_sleep_circle"
+                android:padding="12dp"
+                android:src="@drawable/ic_night"
+                android:tint="#FFFFFFFF" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_light_sleep"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_light_sleep_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextPrimaryTransparent"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="2" />
+
+                <TextView
+                    android:id="@+id/tv_light_sleep_hours_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/hour_unit"
+                    android:textColor="@color/colorTextPrimaryTransparent"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_light_sleep_minutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextPrimaryTransparent"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="17" />
+
+                <TextView
+                    android:id="@+id/tv_light_sleep_minutes_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
@@ -120,53 +139,9 @@
                     android:textColor="@color/colorTextPrimaryTransparent"
                     android:textSize="12sp" />
             </LinearLayout>
-
         </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/distance_info_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <ImageView
-                android:id="@+id/iv_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/distance_circle"
-                android:padding="12dp"
-                android:src="@drawable/ic_distance"
-                android:tint="#FFFFFFFF" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/iv_distance"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextPrimaryTransparent"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:text="1,34" />
-
-                <TextView
-                    android:id="@+id/tv_distance_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:text="@string/km_unit"
-                    android:textColor="@color/colorTextPrimaryTransparent"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </RelativeLayout>
-
     </LinearLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -186,9 +161,9 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginEnd="75dp"
                 android:layout_marginStart="75dp"
-                android:background="@drawable/steps_circle"
+                android:background="@drawable/total_sleep_circle"
                 android:padding="12dp"
-                android:src="@drawable/ic_footsteps"
+                android:src="@drawable/ic_total_sleep"
                 android:tint="#FFFFFFFF" />
 
             <LinearLayout
@@ -197,22 +172,42 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_steps"
+                    android:id="@+id/tv_sleep_hours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorTextPrimaryTransparent"
                     android:textSize="32sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="8" />
 
                 <TextView
-                    android:id="@+id/tv_steps_unit"
+                    android:id="@+id/tv_sleep_hours_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="@string/steps"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginStart="3dp"
+                    android:text="@string/hour_unit"
                     android:textColor="@color/colorTextPrimaryTransparent"
                     android:textSize="22sp" />
 
+                <TextView
+                    android:id="@+id/tv_sleep_minutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextPrimaryTransparent"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    tools:text="32" />
+
+                <TextView
+                    android:id="@+id/tv_sleep_minutes_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginStart="3dp"
+                    android:text="@string/min_unit"
+                    android:textColor="@color/colorTextPrimaryTransparent"
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <View
@@ -221,12 +216,12 @@
                 android:layout_marginTop="@dimen/horizontal_divider_vertical_margin" />
 
             <TextView
-                android:id="@+id/tv_steps_goal"
+                android:id="@+id/tv_sleep_goal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorTextSecondary"
-                android:textSize="16sp" />
-
+                android:textSize="16sp"
+                tools:text="Цель: 8ч 00мин" />
         </LinearLayout>
 
         <com.hookedonplay.decoviewlib.DecoView

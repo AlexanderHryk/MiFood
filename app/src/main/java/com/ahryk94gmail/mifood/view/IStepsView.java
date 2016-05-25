@@ -14,7 +14,7 @@ public interface IStepsView {
 
     void setDistance(float distance);
 
-    void showInto(long animDuration);
+    void showIntro(long animDuration);
 
     void setProgress(int steps, long animDuration, long animDelay);
 

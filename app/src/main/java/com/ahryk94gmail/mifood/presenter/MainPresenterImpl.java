@@ -18,8 +18,7 @@ public class MainPresenterImpl implements IMainPresenter {
 
     public MainPresenterImpl(IMainView view) {
         this.mMainView = view;
-        this.mControlPoint = new BleActionExecutionServiceControlPoint(view.getContext());
-        this.mControlPoint.bind();
+        this.mControlPoint = BleActionExecutionServiceControlPoint.getInstance(view.getContext());
     }
 
 
@@ -31,7 +30,7 @@ public class MainPresenterImpl implements IMainPresenter {
     @Override
     public void setUserProfile(int pairingResultCode, Intent data) {
         if (pairingResultCode == BleActionExecutionService.EXTRA_PAIRING_RESULT_CODE_SUCCESS) {
-            UserProfile userProfile = new UserProfile(10000000, 1, 21, 182, 76, "Alex", 1);
+            UserProfile userProfile = new UserProfile(10000000, UserProfile.GENDER_MALE, 21, 182, 76, "Alex", 1);
             String deviceAddress = data.getStringExtra(BleActionExecutionService.EXTRA_DEVICE_ADDRESS);
             this.mControlPoint.addToQueue(new SetUserProfileAction(userProfile, deviceAddress));
         } else {

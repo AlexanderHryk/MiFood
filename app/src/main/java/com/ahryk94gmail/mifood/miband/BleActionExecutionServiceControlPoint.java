@@ -13,6 +13,17 @@ import java.util.List;
 
 public class BleActionExecutionServiceControlPoint implements IBleActionExecutionServiceControlPoint {
 
+    private static BleActionExecutionServiceControlPoint instance;
+
+    public synchronized static BleActionExecutionServiceControlPoint getInstance(Context context) {
+        if (instance == null) {
+            instance = new BleActionExecutionServiceControlPoint(context);
+            instance.bind();
+        }
+
+        return instance;
+    }
+
     private static final boolean DBG = true;
 
     private Context mContext;
@@ -21,7 +32,7 @@ public class BleActionExecutionServiceControlPoint implements IBleActionExecutio
     private IBleActionExecutionServiceControlPoint mControlPoint;
     private List<IBleAction> mBuffer;
 
-    public BleActionExecutionServiceControlPoint(Context context) {
+    private BleActionExecutionServiceControlPoint(Context context) {
         this.mContext = context;
         this.mBuffer = new LinkedList<>();
 

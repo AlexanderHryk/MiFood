@@ -10,6 +10,7 @@ import com.ahryk94gmail.mifood.Debug;
 import com.ahryk94gmail.mifood.model.ActivityData;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ActivityDbHelper extends SQLiteOpenHelper {
@@ -71,14 +72,11 @@ public class ActivityDbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<ActivityData> SelectActivityData() {
+    private List<ActivityData> SelectActivityData(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
         SQLiteDatabase db = this.getWritableDatabase();
         List<ActivityData> list = new ArrayList<>();
 
-        String selectionArgs[] = {String.valueOf(ActivityData.TYPE_DEEP_SLEEP), String.valueOf(ActivityData.TYPE_LIGHT_SLEEP), String.valueOf(ActivityData.TYPE_ACTIVITY)};
-        String selection = DB_TYPE_KEY + " = ? OR " + DB_TYPE_KEY + " = ? OR " + DB_TYPE_KEY + " = ?";
-
-        Cursor c = db.query(DB_ACTIVITY_TABLE, null, selection, selectionArgs, null, null, DB_TIMESTAMP_KEY);
+        Cursor c = db.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
 
         if (c.moveToFirst()) {
             int timestampColIndex = c.getColumnIndex(DB_TIMESTAMP_KEY);
@@ -103,6 +101,19 @@ public class ActivityDbHelper extends SQLiteOpenHelper {
         db.close();
 
         return list;
+    }
+
+    public List<ActivityData> SelectActivityData(int timestampFrom, int timestampTo) {
+        String selectionArgs[] = {
+                String.valueOf(ActivityData.TYPE_DEEP_SLEEP),
+                String.valueOf(ActivityData.TYPE_LIGHT_SLEEP),
+                String.valueOf(ActivityData.TYPE_ACTIVITY),
+                String.valueOf(timestampFrom),
+                String.valueOf(timestampTo)
+        };
+        String selection = DB_TYPE_KEY + " IN (?, ?, ?) AND " + DB_TIMESTAMP_KEY + " BETWEEN ? AND ?";
+
+        return SelectActivityData(DB_ACTIVITY_TABLE, null, selection, selectionArgs, null, null, DB_TIMESTAMP_KEY);
     }
 
     @Override

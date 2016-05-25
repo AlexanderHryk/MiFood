@@ -2,7 +2,9 @@ package com.ahryk94gmail.mifood.view;
 
 import android.content.Context;
 
-import java.util.Date;
+import com.ahryk94gmail.mifood.model.HrMeasurementInfo;
+
+import java.util.List;
 
 public interface IHeartRateView {
 
@@ -14,7 +16,9 @@ public interface IHeartRateView {
 
     void setHeartRate(int heartRate);
 
-    void addMeasurementInfo(int heartRate, Date dateTime, boolean heartRateState);
+    void addMeasurementInfo(HrMeasurementInfo info);
+
+    void addMeasurementInfo(List<HrMeasurementInfo> info);
 
     void showFab();
 
