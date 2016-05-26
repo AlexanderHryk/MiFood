@@ -5,6 +5,8 @@ public class ActivityData {
     public static final int TYPE_DEEP_SLEEP = 5;
     public static final int TYPE_LIGHT_SLEEP = 4;
     public static final int TYPE_ACTIVITY = -1;
+    public static final int TYPE_WALK = 1;
+    public static final int TYPE_RUN = 2;
 
     public static final byte PROVIDER_MIBAND = 0;
 

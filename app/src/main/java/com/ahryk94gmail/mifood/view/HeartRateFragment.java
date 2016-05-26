@@ -53,13 +53,15 @@ public class HeartRateFragment extends Fragment implements IHeartRateView, View.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_heart_rate, container, false);
-        this.mRippleBackground = (RippleBackground) view.findViewById(R.id.content);
+
         this.mDecoView = (DecoView) view.findViewById(R.id.dynamicArcView);
         this.mTvHeartRate = (TextView) view.findViewById(R.id.tv_heart_rate);
         this.mTvHeartRateUnit = (TextView) view.findViewById(R.id.tv_heart_rate_unit);
+        this.mRippleBackground = (RippleBackground) view.findViewById(R.id.content);
         this.mLvHistory = (ListView) view.findViewById(R.id.lv_history);
         this.mFabStartHrMeasuring = (FloatingActionButton) view.findViewById(R.id.fab_start_hr_measuring);
         this.mFabStartHrMeasuring.setOnClickListener(this);
+
         return view;
     }
 

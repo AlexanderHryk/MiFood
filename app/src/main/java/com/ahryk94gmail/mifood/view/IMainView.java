@@ -4,7 +4,7 @@ import android.content.Context;
 
 public interface IMainView {
 
-    Context getContext();
-
     void showMessage(String message);
+
+    Context getContext();
 }

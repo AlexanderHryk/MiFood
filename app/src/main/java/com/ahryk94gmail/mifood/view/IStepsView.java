@@ -4,19 +4,19 @@ import android.content.Context;
 
 public interface IStepsView {
 
-    void setSteps(int steps);
-
-    void setGoal(int goal);
-
-    void setCal(int cal);
-
-    void setTime(int min);
-
-    void setDistance(float distance);
-
     void showIntro(long animDuration);
 
     void setProgress(int steps, long animDuration, long animDelay);
+
+    void setSteps(int steps);
+
+    void setGoal(int steps);
+
+    void setCal(int cal);
+
+    void setActivityTime(int seconds);
+
+    void setDistance(float distance);
 
     Context getContext();
 }

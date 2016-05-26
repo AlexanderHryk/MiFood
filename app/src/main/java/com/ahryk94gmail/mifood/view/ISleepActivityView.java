@@ -8,6 +8,8 @@ public interface ISleepActivityView {
 
     void setTotalSleepTime(int seconds);
 
+    void setGoal(int seconds);
+
     void setDeepSleepTime(int seconds);
 
     void setLightSleepTime(int seconds);
@@ -17,8 +19,6 @@ public interface ISleepActivityView {
     void setDeepSleepTime(int seconds, long animDuration, long animDelay);
 
     void setLightSleepTime(int seconds, long animDuration, long animDelay);
-
-    void setGoal(int seconds);
 
     Context getContext();
 }

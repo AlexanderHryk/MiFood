@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.ahryk94gmail.mifood.DateTimeUtils;
 import com.ahryk94gmail.mifood.UserPreferences;
+import com.ahryk94gmail.mifood.db.ActivityDbHelper;
 import com.ahryk94gmail.mifood.miband.BleActionExecutionService;
 import com.ahryk94gmail.mifood.miband.BleActionExecutionServiceControlPoint;
 import com.ahryk94gmail.mifood.miband.ConnectAction;
@@ -17,15 +19,18 @@ import com.ahryk94gmail.mifood.miband.ReadAction;
 import com.ahryk94gmail.mifood.miband.RealtimeStepsNotifyAction;
 import com.ahryk94gmail.mifood.miband.SetRealtimeStepsNotificationAction;
 import com.ahryk94gmail.mifood.miband.SetUserProfileAction;
+import com.ahryk94gmail.mifood.model.ActivityData;
 import com.ahryk94gmail.mifood.model.UserProfile;
 import com.ahryk94gmail.mifood.view.IStepsView;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
 public class StepsPresenterImpl implements IStepsPresenter {
 
     private static final boolean DBG = true;
+
     private static final long INTRO_ANIM_DURATION = 1000L;
     private static final long PROGRESS_ANIM_DURATION = 2500L;
 
@@ -33,21 +38,23 @@ public class StepsPresenterImpl implements IStepsPresenter {
     private BleActionExecutionServiceControlPoint mControlPoint;
     private BroadcastReceiver mRealtimeStepsReceiver;
     private BroadcastReceiver mStepsReceiver;
-    private boolean mIsRealtimeStepsUpdateEnabled;
+    private boolean mIsRealtimeStepsUpdateEnabled = false;
 
-    public StepsPresenterImpl(IStepsView view) {
+    public StepsPresenterImpl(final IStepsView view) {
         this.mStepsView = view;
-        this.mStepsView.setGoal(10000);
+        this.mStepsView.setGoal(getGoal());
         this.mStepsView.setSteps(0);
         this.mStepsView.setCal(0);
-        this.mStepsView.setTime(0);
+        this.mStepsView.setActivityTime(0);
         this.mStepsView.setDistance(0f);
         this.mControlPoint = BleActionExecutionServiceControlPoint.getInstance(view.getContext());
 
         this.mRealtimeStepsReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (!mIsRealtimeStepsUpdateEnabled) return;
+                if (!mIsRealtimeStepsUpdateEnabled)
+                    return;
+
                 int steps = intent.getIntExtra(BleActionExecutionService.EXTRA_STEPS, 0);
                 mStepsView.setSteps(steps);
             }
@@ -58,9 +65,14 @@ public class StepsPresenterImpl implements IStepsPresenter {
             public void onReceive(Context context, Intent intent) {
                 int steps = intent.getIntExtra(BleActionExecutionService.EXTRA_STEPS, 0);
 
+                Calendar today = Calendar.getInstance();
+
+                List<ActivityData> samples = ActivityDbHelper.getInstance(view.getContext())
+                        .SelectActivityData(DateTimeUtils.startOfDay(today.getTimeInMillis()), DateTimeUtils.endOfDay(today.getTimeInMillis()));
+
                 mStepsView.setProgress(steps, PROGRESS_ANIM_DURATION, 0L);
                 mStepsView.setCal(123);
-                mStepsView.setTime(37 * 60);
+                mStepsView.setActivityTime(samples.size() * 60);
                 mStepsView.setDistance(1.34f);
             }
         };

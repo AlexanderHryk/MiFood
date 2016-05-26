@@ -23,4 +23,12 @@ public class DateTimeUtils {
 
         return (int) (cal.getTimeInMillis() / 1000);
     }
+
+    public static int[] convertSecondsToHoursMinutes(int seconds) {
+        int hours = seconds / (60 * 60);
+        int minutes = (seconds % (60 * 60)) / 60;
+        int[] result = {hours, minutes};
+
+        return result;
+    }
 }

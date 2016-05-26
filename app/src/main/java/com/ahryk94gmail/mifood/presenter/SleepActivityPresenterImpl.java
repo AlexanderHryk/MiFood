@@ -31,6 +31,7 @@ import java.util.List;
 public class SleepActivityPresenterImpl implements ISleepActivityPresenter {
 
     private static final boolean DBG = true;
+
     private static final long INTRO_ANIM_DURATION = 1000L;
     private static final long PROGRESS_ANIM_DURATION = 1000L;
 
@@ -38,9 +39,12 @@ public class SleepActivityPresenterImpl implements ISleepActivityPresenter {
     private BleActionExecutionServiceControlPoint mControlPoint;
     private BroadcastReceiver mSyncCompletedReceiver;
 
-
     public SleepActivityPresenterImpl(ISleepActivityView view) {
         this.mSleepActivityView = view;
+        this.mSleepActivityView.setGoal(getGoal());
+        this.mSleepActivityView.setTotalSleepTime(0);
+        this.mSleepActivityView.setDeepSleepTime(0);
+        this.mSleepActivityView.setLightSleepTime(0);
         this.mControlPoint = BleActionExecutionServiceControlPoint.getInstance(view.getContext());
 
         this.mSyncCompletedReceiver = new BroadcastReceiver() {
@@ -49,7 +53,7 @@ public class SleepActivityPresenterImpl implements ISleepActivityPresenter {
                 Calendar today = Calendar.getInstance();
 
                 List<ActivityData> samples = ActivityDbHelper.getInstance(context)
-                        .SelectActivityData(DateTimeUtils.startOfDay(today.getTimeInMillis()), DateTimeUtils.endOfDay(today.getTimeInMillis()));
+                        .SelectSleepActivityData(DateTimeUtils.startOfDay(today.getTimeInMillis()), DateTimeUtils.endOfDay(today.getTimeInMillis()));
                 ActivityAnalysis analysis = new ActivityAnalysis();
                 ActivityAmounts amounts = analysis.calculateActivityAmounts(samples);
 
@@ -79,11 +83,6 @@ public class SleepActivityPresenterImpl implements ISleepActivityPresenter {
                 }
             }
         };
-
-        this.mSleepActivityView.setGoal(getGoal());
-        this.mSleepActivityView.setTotalSleepTime(0);
-        this.mSleepActivityView.setDeepSleepTime(0);
-        this.mSleepActivityView.setLightSleepTime(0);
 
         LocalBroadcastManager.getInstance(this.mSleepActivityView.getContext())
                 .registerReceiver(this.mSyncCompletedReceiver, new IntentFilter(BleActionExecutionService.ACTION_SYNC_COMPLETED));

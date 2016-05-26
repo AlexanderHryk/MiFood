@@ -50,7 +50,6 @@ public class HeartRatePresenterImpl implements IHeartRatePresenter {
                 HrMeasurementInfo info = new HrMeasurementInfo(heartRate, Calendar.getInstance().getTime(), heartRate < 90);
                 mHeartRateView.addMeasurementInfo(info);
                 mHrMeasurementHistoryDbHelper.InsertHrMeasurementInfo(info);
-
                 mHeartRateView.showFab();
             }
         };
@@ -65,6 +64,7 @@ public class HeartRatePresenterImpl implements IHeartRatePresenter {
     public void startHeartRateMeasuring() {
         mHeartRateView.hideFab();
         mHeartRateView.startMeasuringAnimation();
+
         BluetoothDevice bondedDevice = UserPreferences.getInstance().loadBondedDevice(this.mHeartRateView.getContext());
         UserProfile userProfile = new UserProfile(10000000, UserProfile.GENDER_MALE, 21, 182, 76, "Alex", 0);
 

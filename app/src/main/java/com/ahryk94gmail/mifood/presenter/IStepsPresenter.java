@@ -4,9 +4,9 @@ public interface IStepsPresenter {
 
     void setRealtimeStepsUpdateEnabled(boolean enabled);
 
-    void sync();
-
     int getGoal();
+
+    void sync();
 
     void onDestroy();
 }

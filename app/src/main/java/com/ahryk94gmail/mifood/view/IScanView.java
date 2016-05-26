@@ -21,7 +21,7 @@ public interface IScanView {
 
     void finish();
 
-    Context getContext();
-
     void showMessage(String message);
+
+    Context getContext();
 }

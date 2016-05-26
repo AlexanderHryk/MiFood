@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.ahryk94gmail.mifood.DateTimeUtils;
 import com.ahryk94gmail.mifood.R;
 import com.ahryk94gmail.mifood.presenter.ISleepActivityPresenter;
 import com.ahryk94gmail.mifood.presenter.SleepActivityPresenterImpl;
@@ -26,7 +27,6 @@ public class SleepActivityFragment extends Fragment implements ISleepActivityVie
     private static final long EFFECT_SPIRAL_OUT_ANIM_DURATION = 1500L;
 
     private ISleepActivityPresenter mSleepActivityPresenter;
-    private DecoView mDecoView;
     private TextView mTvSleepHours;
     private TextView mTvSleepHoursUnit;
     private TextView mTvSleepMinutes;
@@ -40,6 +40,7 @@ public class SleepActivityFragment extends Fragment implements ISleepActivityVie
     private TextView mTvLightSleepMinutes;
     private TextView mTvLightSleepMinutesUnit;
     private TextView mTvSleepGoal;
+    private DecoView mDecoView;
     private int mBackgroundSeriesId;
     private int mTotalSleepSeriesId;
     private int mDeepSleepSeriesId;
@@ -54,24 +55,21 @@ public class SleepActivityFragment extends Fragment implements ISleepActivityVie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sleep_activity, container, false);
-        this.mDecoView = (DecoView) view.findViewById(R.id.dynamicArcView);
 
         this.mTvSleepHours = (TextView) view.findViewById(R.id.tv_sleep_hours);
         this.mTvSleepHoursUnit = (TextView) view.findViewById(R.id.tv_sleep_hours_unit);
         this.mTvSleepMinutes = (TextView) view.findViewById(R.id.tv_sleep_minutes);
         this.mTvSleepMinutesUnit = (TextView) view.findViewById(R.id.tv_sleep_minutes_unit);
-
         this.mTvDeepSleepHours = (TextView) view.findViewById(R.id.tv_deep_sleep_hours);
         this.mTvDeepSleepHoursUnit = (TextView) view.findViewById(R.id.tv_deep_sleep_hours_unit);
         this.mTvDeepSleepMinutes = (TextView) view.findViewById(R.id.tv_deep_sleep_minutes);
         this.mTvDeepSleepMinutesUnit = (TextView) view.findViewById(R.id.tv_deep_sleep_minutes_unit);
-
         this.mTvLightSleepHours = (TextView) view.findViewById(R.id.tv_light_sleep_hours);
         this.mTvLightSleepHoursUnit = (TextView) view.findViewById(R.id.tv_light_sleep_hours_unit);
         this.mTvLightSleepMinutes = (TextView) view.findViewById(R.id.tv_light_sleep_minutes);
         this.mTvLightSleepMinutesUnit = (TextView) view.findViewById(R.id.tv_light_sleep_minutes_unit);
-
         this.mTvSleepGoal = (TextView) view.findViewById(R.id.tv_sleep_goal);
+        this.mDecoView = (DecoView) view.findViewById(R.id.dynamicArcView);
 
         return view;
     }
@@ -138,7 +136,7 @@ public class SleepActivityFragment extends Fragment implements ISleepActivityVie
 
     @Override
     public void setTotalSleepTime(int seconds) {
-        int[] time = convertSecondsToHoursMinutes(seconds);
+        int[] time = DateTimeUtils.convertSecondsToHoursMinutes(seconds);
 
         this.mTvSleepHours.setText(String.valueOf(time[0]));
         this.mTvSleepMinutes.setText(String.valueOf(time[1]));
@@ -146,7 +144,7 @@ public class SleepActivityFragment extends Fragment implements ISleepActivityVie
 
     @Override
     public void setDeepSleepTime(int seconds) {
-        int[] time = convertSecondsToHoursMinutes(seconds);
+        int[] time = DateTimeUtils.convertSecondsToHoursMinutes(seconds);
 
         this.mTvDeepSleepHours.setText(String.valueOf(time[0]));
         this.mTvDeepSleepMinutes.setText(String.valueOf(time[1]));
@@ -154,7 +152,7 @@ public class SleepActivityFragment extends Fragment implements ISleepActivityVie
 
     @Override
     public void setLightSleepTime(int seconds) {
-        int[] time = convertSecondsToHoursMinutes(seconds);
+        int[] time = DateTimeUtils.convertSecondsToHoursMinutes(seconds);
 
         this.mTvLightSleepHours.setText(String.valueOf(time[0]));
         this.mTvLightSleepMinutes.setText(String.valueOf(time[1]));
@@ -240,25 +238,13 @@ public class SleepActivityFragment extends Fragment implements ISleepActivityVie
 
     @Override
     public void setGoal(int seconds) {
-        int[] time = convertSecondsToHoursMinutes(seconds);
+        int[] time = DateTimeUtils.convertSecondsToHoursMinutes(seconds);
 
         String sleepGoal = getString(R.string.goal) + " "
                 + String.valueOf(time[0]) + " " + getString(R.string.hour_unit) + " "
                 + String.format("%02d", time[1]) + " " + getString(R.string.min_unit);
 
         this.mTvSleepGoal.setText(sleepGoal);
-    }
-
-    private int[] convertSecondsToHoursMinutes(int seconds) {
-        int hours = seconds / (60 * 60);
-        int minutes = (seconds % (60 * 60)) / 60;
-        int[] result = {hours, minutes};
-
-        return result;
-    }
-
-    private int convertHoursMinutesToSeconds(int hours, int minutes) {
-        return hours * 60 * 60 + minutes * 60;
     }
 
     @Override
